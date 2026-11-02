@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The All New Eco-Rewards System</title>
+  <meta name="description"
+    content="A smart dustbin system which gives reward on every bottle thrown, helping in keeping the environment clean and appreciates the user." />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>" />
+</head>
+
+<body>
+
+  <!-- =========================================================
+       Navigation (Purely Student & Public Facing)
+  ========================================================== -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#hero" class="brand">
+        <span class="brand-icon">🌿</span>
+        <span>EcoReward</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#what-is-it">What is it?</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#registration-box">Registration</a>
+        <a href="#rewards">Surprise Gifts</a>
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#how-we-built-it">How We Built It</a>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Logged Out -->
+        <div id="nav-logged-out" style="display: flex; gap: 8px;">
+          <button class="btn btn-sm btn-outline" onclick="openModal('login-modal')">Student Login</button>
+          <button class="btn btn-sm btn-primary" onclick="openModal('register-modal')">Sign Up</button>
+        </div>
+
+        <!-- Logged In -->
+        <div id="nav-logged-in" style="display: none; align-items: center; gap: 10px;">
+          <button class="btn btn-sm btn-primary" onclick="openClaimModal()">🍾 Claim Reward</button>
+          <button class="btn btn-sm btn-outline" onclick="logoutStudent()">Log Out</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- =========================================================
+       Top Hero Banner with Talking Avatar Guide on the Right
+  ========================================================== -->
+  <header class="hero" id="hero">
+    <div class="container">
+      <div class="hero-grid">
+
+        <!-- Left Banner: Mission & Heading -->
+        <div class="hero-text-col">
+          <div class="hero-eyebrow">
+            <span>✨ Introducing</span>
+          </div>
+
+          <h1 class="hero-title">
+            The all new <br />
+            <span class="gradient-text">Eco-Rewards system</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            A smart dustbin which gives reward on every bottle thrown, helping in keeping the environment clean and
+            appreciates the user.
+          </p>
+
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-lg btn-primary" onclick="openModal('register-modal')">
+              📱 Register Now
+            </button>
+            <button class="btn btn-lg btn-outline" onclick="openClaimModal()">
+              🍾 Claim Bottle Reward
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Banner: Talking Avatar Guide with Auto-Scroll -->
+        <div class="hero-visual-col">
+          <div class="top-avatar-banner-card" id="top-avatar-container">
+            <div class="top-avatar-header">
+              <div class="top-avatar-meta">
+                <span class="avatar-badge" id="top-avatar-badge">Intro</span>
+                <span style="font-size: 0.75rem; color: #6ee7b7; font-weight: 700;">Verdy Guide</span>
+              </div>
+              <span style="font-size: 0.75rem; color: #94a3b8;" id="top-avatar-step">1/5</span>
+            </div>
+
+            <div class="top-avatar-body">
+              <div class="top-avatar-circle" id="top-avatar-svg">
+                <!-- SVG Avatar Mouth Animation -->
+              </div>
+              <div class="top-avatar-speech">
+                <h4 id="top-avatar-title" style="color: #34d399; font-size: 0.95rem; margin-bottom: 4px;">Welcome to
+                  EcoReward!</h4>
+                <p id="top-avatar-text" style="font-size: 0.85rem; color: #f1f5f9; line-height: 1.4;">
+                  Welcome! Click 'Watch Guide' to see the whole system explained with automatic page scrolling!
+                </p>
+                <div class="top-avatar-waves" id="top-avatar-wave">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Avatar Action Controls -->
+            <div class="top-avatar-controls">
+              <button class="btn btn-xs btn-outline" id="btn-avatar-prev"
+                style="color: white; border-color: rgba(255,255,255,0.2);">◀</button>
+              <button class="btn btn-xs btn-primary" id="btn-avatar-tour">🎬 Watch Guide</button>
+              <button class="btn btn-xs btn-secondary" id="btn-avatar-speak">▶️ Listen</button>
+              <button class="btn btn-xs btn-outline" id="btn-avatar-next"
+                style="color: white; border-color: rgba(255,255,255,0.2);">▶</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Campus Stats Ticker -->
+      <div class="impact-tickers">
+        <div class="ticker-item">
+          <div class="ticker-icon">🍾</div>
+          <span class="ticker-val" id="stat-total-bottles">--</span>
+          <span class="ticker-label">Bottles Recycled</span>
+        </div>
+        <div class="ticker-item">
+          <div class="ticker-icon">🌟</div>
+          <span class="ticker-val" id="stat-total-points">--</span>
+          <span class="ticker-label">Eco-Points Awarded</span>
+        </div>
+        <div class="ticker-item">
+          <div class="ticker-icon">🌍</div>
+          <span class="ticker-val" id="stat-total-co2">--</span>
+          <span class="ticker-label">CO₂ Pollution Diverted</span>
+        </div>
+        <div class="ticker-item">
+          <div class="ticker-icon">👥</div>
+          <span class="ticker-val" id="stat-active-students">--</span>
+          <span class="ticker-label">Active Eco-Students</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       Student Logged-In Dashboard
+  ========================================================== -->
+  <section class="section" id="student-dashboard-section"
+    style="display: none; background: #ffffff; border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="dashboard-grid">
+
+        <!-- Clean Student Card (No QR Code as requested) -->
+        <div class="student-id-card">
+          <div style="font-size: 2.2rem; margin-bottom: 6px;">🧑‍🎓</div>
+          <h3 id="dash-name" style="font-size: 1.3rem;">Student Name</h3>
+          <p id="dash-email" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2px;">
+            student@school.edu</p>
+          <span class="badge badge-green" id="dash-grade">Grade 9</span>
+
+          <div class="id-stats-row" style="margin-top: 20px;">
+            <div class="id-stat-col">
+              <span class="id-stat-val" id="dash-points">0</span>
+              <span class="id-stat-lbl">Points</span>
+            </div>
+            <div class="id-stat-col">
+              <span class="id-stat-val" id="dash-bottles">0</span>
+              <span class="id-stat-lbl">Bottles</span>
+            </div>
+            <div class="id-stat-col">
+              <span class="id-stat-val" id="dash-co2">0 kg</span>
+              <span class="id-stat-lbl">CO₂ Saved</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Claim & History Panel -->
+        <div>
+          <div class="claims-history-card" id="claim-action-area">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+              <h4 style="font-size: 1.15rem; color: #064e3b;">Recycle & Claim Reward</h4>
+              <button class="btn btn-sm btn-primary" onclick="openClaimModal()">+ Log Bottle Drop</button>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
+              Dropped a bottle in the smart dustbin? Log your deposit. Once approved by the school admin, points reflect
+              in your account.
+            </p>
+            <div id="student-claims-list"></div>
+          </div>
+
+          <div class="claims-history-card">
+            <h4 style="font-size: 1.15rem; color: #064e3b; margin-bottom: 8px;">Surprise Eco Gifts Progress</h4>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
+              Recycle bottles to earn points and unlock exciting mystery rewards!
+            </p>
+            <div id="student-surprise-progress"></div>
+            <div id="student-redemptions-list" style="margin-top: 14px;"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       Section: What is the eco reward system?
+  ========================================================== -->
+  <section class="section section-alt" id="what-is-it">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">About</span>
+        <h2 class="section-title">What is the eco reward system?</h2>
+        <p class="section-desc"
+          style="font-size: 1.25rem; font-weight: 600; color: #065f46; max-width: 800px; margin: 0 auto;">
+          It is a smart dustbin which gives reward on every bottle thrown, helping in keeping the environment clean and
+          appreciates the user.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       Section: How does this benefits the environment?
+  ========================================================== -->
+  <section class="section" id="benefits">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Ecological Impact</span>
+        <h2 class="section-title">How does this benefits the environment?</h2>
+        <p class="section-desc">Every plastic bottle deposited in the eco dustbin makes a real difference.</p>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon-box">🚯</div>
+          <h4>Encourages Bin Use</h4>
+          <p>It encourage people to throw plastic bottle in the bins instead of the environment</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon-box">♻️</div>
+          <h4>Reduces Pollution</h4>
+          <p>It helps in reduces plastic pollution</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon-box">🏫</div>
+          <h4>Keeps Spaces Clean</h4>
+          <p>Helps in keeping public places clean</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon-box">🌱</div>
+          <h4>Develops Habits</h4>
+          <p>Motivates people to develop eco-friendly habits</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon-box">🐬</div>
+          <h4>Protects Wildlife</h4>
+          <p>Helps in protecting wildlife</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       Section: Registration (Scan QR or Type Website URL)
+  ========================================================== -->
+  <section class="section section-alt" id="registration-box">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Join In 10 Seconds</span>
+        <h2 class="section-title">Student Registration</h2>
+        <p class="section-desc">
+          Scan the QR code below with your mobile phone or use this website directly.
+        </p>
+      </div>
+
+      <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; align-items: center; max-width: 860px; margin: 0 auto; background: #ffffff; padding: 32px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+
+        <!-- Option A: Scan QR -->
+        <div style="text-align: center; border-right: 1px dashed var(--border); padding-right: 20px;">
+          <h4 style="margin-bottom: 8px;">Method 1: Scan QR Code</h4>
+          <span class="badge badge-green" style="margin-bottom: 8px;">Available at school counter & bin</span>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+            Scan with your mobile camera. <em>(Note: This on-screen QR code is a demo/preview. The official printed QR
+              code is available at the school registration counter and on the EcoDustbin.)</em>
+          </p>
+          <div id="reg-qr-code-img"
+            style="display: inline-block; padding: 12px; background: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border);">
+          </div>
+          <div style="font-size: 0.75rem; color: #64748b; margin-top: 8px;">Demo Preview QR (Official QR at counter)
+          </div>
+        </div>
+
+        <!-- Option B: Direct Web Registration -->
+        <div>
+          <h4 style="margin-bottom: 8px;">Method 2: Register Online</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+            Enter minimum information to register and earn 10 starter Eco-Points!
+          </p>
+          <button class="btn btn-primary" style="width: 100%; padding: 12px; margin-bottom: 10px;"
+            onclick="openModal('register-modal')">
+            📝 Open Registration Form
+          </button>
+          <button class="btn btn-outline" style="width: 100%; padding: 10px;" onclick="openModal('login-modal')">
+            Already registered? Log in with Email
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       Section: School Rewards (Surprise Gifts Only)
+  ========================================================== -->
+  <section class="section" id="rewards">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Rewards Catalog</span>
+        <h2 class="section-title">Surprise Eco Gifts</h2>
+        <p class="section-desc">Turn your recycled plastic bottles into thrilling surprise gifts and eco hampers!</p>
+      </div>
+
+      <div class="rewards-grid" id="rewards-grid">
+        <!-- Loaded dynamically with surprise gift items -->
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       Section: How We Built It
+  ========================================================== -->
+  <section class="section section-alt" id="how-we-built-it">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Architecture</span>
+        <h2 class="section-title">How We Built It</h2>
+        <p class="section-desc">A smart IoT dustbin paired with an ultra-lightweight cloud backend.</p>
+      </div>
+
+      <div class="blueprint-card">
+        <div class="blueprint-flow">
+          <div class="flow-step">
+            <span class="flow-num">1</span>
+            <div class="flow-icon">📡</div>
+            <h5>Sensors</h5>
+            <p>Ultrasonic & optical sensors detect approaching hand and bottle entry.</p>
+          </div>
+
+          <div class="flow-step">
+            <span class="flow-num">2</span>
+            <div class="flow-icon">⚙️</div>
+            <h5>Smart Bin Edge</h5>
+            <p>Microcontroller opens the motorized flap and confirms bottle drop.</p>
+          </div>
+
+          <div class="flow-step">
+            <span class="flow-num">3</span>
+            <div class="flow-icon">📱</div>
+            <h5>Student Log</h5>
+            <p>User clicks Claim Reward to submit their deposit.</p>
+          </div>
+
+          <div class="flow-step">
+            <span class="flow-num">4</span>
+            <div class="flow-icon">👩‍🏫</div>
+            <h5>Admin Approval</h5>
+            <p>School admin verifies deposit and points reflect immediately in user account.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       Leaderboard Section
+  ========================================================== -->
+  <section class="section" id="leaderboard">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Eco Champions</span>
+        <h2 class="section-title">School Leaderboard</h2>
+        <p class="section-desc">Top students helping keep our school clean.</p>
+      </div>
+
+      <div class="leaderboard-container">
+        <div class="leaderboard-list" id="leaderboard-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       Clean Footer
+  ========================================================== -->
+  <footer class="footer">
+    <div class="container" style="text-align: center;">
+      <div style="font-size: 1.5rem; margin-bottom: 8px;">🌿 The All New Eco-Rewards System</div>
+      <p style="color: #94a3b8; font-size: 0.88rem; max-width: 500px; margin: 0 auto 16px;">
+        Thank you for helping keep our environment clean!
+      </p>
+      <div style="font-size: 0.78rem; color: #64748b;">
+        &copy; 2026 EcoReward. Simple, clean, and lightweight.
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       MODAL: Student Registration (Capturing Min Info: Name & Email)
+  ========================================================== -->
+  <div class="modal-backdrop" id="register-modal">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" onclick="closeModal('register-modal')">✕</button>
+      <div class="modal-header">
+        <span class="badge badge-green">Quick Sign Up</span>
+        <h3 style="margin-top: 6px;">Register Student Account</h3>
+        <p>Enter your basic details to start earning points.</p>
+      </div>
+
+      <form id="student-reg-form">
+        <div class="form-group">
+          <label class="form-label">Full Name of Student *</label>
+          <input type="text" id="reg-student-name" class="form-input" placeholder="e.g. Diya Sen" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email ID of Student *</label>
+          <input type="email" id="reg-student-email" class="form-input" placeholder="e.g. diya.sen@school.edu"
+            required />
+          <span class="form-hint">Used to log in again and receive surprise gift claim codes</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Grade / Class (Optional)</label>
+          <input type="text" id="reg-student-grade" class="form-input" placeholder="e.g. Grade 9-A" value="Grade 9" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 8px;">
+          Create Account & Get 10 Bonus Points
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 14px; font-size: 0.85rem;">
+        Already registered? <a href="javascript:void(0)"
+          onclick="closeModal('register-modal'); openModal('login-modal');">Log In with Email</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL: Student Login (Simply with Registered Email!)
+  ========================================================== -->
+  <div class="modal-backdrop" id="login-modal">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" onclick="closeModal('login-modal')">✕</button>
+      <div class="modal-header">
+        <h3>Student Login</h3>
+        <p>Enter your registered student email to access your points balance</p>
+      </div>
+
+      <form id="student-login-form">
+        <div class="form-group">
+          <label class="form-label">Student Email ID</label>
+          <input type="email" id="login-student-email" class="form-input" placeholder="e.g. aarav.sharma@school.edu"
+            required />
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+          Sign In
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 14px; font-size: 0.82rem; color: #64748b;">
+        Need an account? <a href="javascript:void(0)"
+          onclick="closeModal('login-modal'); openModal('register-modal');">Register here</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL: Claim Bottle Reward (Simple, No Bin QR or Bin Numbers!)
+  ========================================================== -->
+  <div class="modal-backdrop" id="claim-modal">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" onclick="closeModal('claim-modal')">✕</button>
+      <div class="modal-header">
+        <span class="badge badge-green">Recycle Bottle</span>
+        <h3 style="margin-top: 6px;">Claim Reward</h3>
+        <p>How many bottles did you throw into the ecodustbin?</p>
+      </div>
+
+      <!-- Bottle Counter -->
+      <div class="bottle-counter-widget">
+        <button class="counter-circle-btn" id="btn-minus-bottle">−</button>
+        <span class="bottle-count-number" id="claim-bottle-count">1</span>
+        <button class="counter-circle-btn" id="btn-plus-bottle">+</button>
+      </div>
+      <div class="points-preview-badge" id="claim-points-calc">+10 Eco-Points</div>
+
+      <div
+        style="background: #f8fafc; border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px; font-size: 0.82rem; color: #64748b; text-align: center;">
+        ℹ️ Once submitted, your claim will be approved by school admin to reflect in your account.
+      </div>
+
+      <button class="btn btn-primary" id="btn-submit-bottle" style="width: 100%; padding: 12px;">
+        Submit for Admin Approval
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       Floating Verdy Guide Controller (Appears when active)
+  ========================================================== -->
+  <div class="avatar-floating-bar" id="avatar-floating-bar" style="display: none;">
+    <div class="avatar-floating-inner">
+      <div class="avatar-floating-avatar" id="avatar-floating-svg">
+        <!-- Mini SVG Avatar -->
+      </div>
+      <div class="avatar-floating-info">
+        <div class="avatar-floating-status">
+          <span class="live-dot"></span>
+          <span id="floating-guide-badge" style="font-weight: 700; color: #10b981;">Verdy Speaking</span>
+          <span style="color: #64748b;" id="floating-guide-counter">1/9</span>
+        </div>
+        <div class="avatar-floating-text" id="floating-guide-topic">Welcome to EcoReward</div>
+      </div>
+      <div class="avatar-floating-actions">
+        <button class="btn btn-xs btn-outline" id="btn-floating-pause" title="Pause / Resume">⏸️ Pause</button>
+        <button class="btn btn-xs btn-outline" id="btn-floating-next" title="Next Section">⏭️ Skip</button>
+        <button class="btn btn-xs btn-danger" id="btn-floating-stop" title="Stop Guide">⏹️ Stop</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/qr.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/avatar.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

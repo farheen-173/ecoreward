@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Approval Portal | EcoReward</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍🏫</text></svg>" />
+</head>
+<body style="background-color: #f1f5f9;">
+
+  <!-- Admin Navbar -->
+  <nav class="navbar" style="border-bottom: 2px solid #059669;">
+    <div class="container nav-container">
+      <div class="brand">
+        <span class="brand-icon">👨‍🏫</span>
+        <span>EcoReward Admin</span>
+        <span class="brand-tag" style="background: #fef3c7; color: #92400e;">Staff Portal</span>
+      </div>
+
+      <div class="nav-actions">
+        <a href="/" class="btn btn-sm btn-outline">← Go to Student Site</a>
+        <button class="btn btn-sm btn-danger" id="btn-admin-logout" style="display: none;" onclick="logoutAdmin()">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top: 30px; padding-bottom: 60px;">
+
+    <!-- Login View (When Not Authenticated) -->
+    <div id="admin-login-view" style="max-width: 440px; margin: 40px auto;">
+      <div class="admin-card">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div style="font-size: 2.8rem; margin-bottom: 8px;">🔐</div>
+          <h2 style="font-size: 1.5rem; color: #064e3b;">School Admin Login</h2>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">
+            Sign in to approve student bottle deposits and credit rewards.
+          </p>
+        </div>
+
+        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px; font-size: 0.85rem;">
+          <div style="font-weight: 700; color: #065f46; margin-bottom: 4px;">🔑 Admin Credentials:</div>
+          <div><strong>User ID / Email:</strong> <code>admin</code> (or <code>admin@school.edu</code>)</div>
+          <div><strong>Password:</strong> <code>admin123</code></div>
+        </div>
+
+        <form id="admin-page-login-form">
+          <div class="form-group">
+            <label class="form-label">User ID / Email</label>
+            <input type="text" id="admin-input-user" class="form-input" value="admin" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="admin-input-pass" class="form-input" value="admin123" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;">
+            Sign In to Admin Dashboard
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard View (When Authenticated) -->
+    <div id="admin-dashboard-view" style="display: none;">
+      
+      <!-- Top Metrics -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="dustbin-card" style="text-align: center;">
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Pending Approvals</span>
+          <div style="font-size: 2.2rem; font-weight: 800; color: #d97706;" id="metric-pending-count">0</div>
+        </div>
+        <div class="dustbin-card" style="text-align: center;">
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Total Bottles Diverted</span>
+          <div style="font-size: 2.2rem; font-weight: 800; color: #059669;" id="metric-total-bottles">0</div>
+        </div>
+        <div class="dustbin-card" style="text-align: center;">
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Active Students</span>
+          <div style="font-size: 2.2rem; font-weight: 800; color: #1e293b;" id="metric-active-students">0</div>
+        </div>
+      </div>
+
+      <!-- Main Action Table -->
+      <div class="admin-card">
+        <div class="admin-header-row">
+          <div>
+            <h3 style="font-size: 1.35rem; color: #064e3b; margin-bottom: 4px;">Bottle Deposit Approval Queue</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Every approved bottle awards <strong>+10 Eco-Points</strong> to the student's account.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-sm btn-primary" onclick="bulkApprove()">⚡ Approve All Pending</button>
+            <button class="btn btn-sm btn-outline" onclick="loadClaims()">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 0.85rem; font-weight: 600; margin-right: 8px;">Filter:</label>
+          <select id="claims-filter-select" class="form-select" style="width: auto; display: inline-block;">
+            <option value="pending" selected>Pending Approval Only</option>
+            <option value="all">All Claims</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Claim ID</th>
+                <th>Student</th>
+                <th>Bottles</th>
+                <th>Points to Award</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="claims-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Student Roster -->
+      <div class="admin-card" style="margin-top: 30px;">
+        <h3 style="font-size: 1.25rem; color: #064e3b; margin-bottom: 16px;">Registered Students & Points Audit</h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Email ID</th>
+                <th>Grade</th>
+                <th>Bottles Recycled</th>
+                <th>Points Balance</th>
+                <th>CO₂ Diverted</th>
+              </tr>
+            </thead>
+            <tbody id="students-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="js/api.js"></script>
+  <script>
+    let adminToken = localStorage.getItem('ecoreward_admin_token');
+
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const t = document.createElement('div');
+      t.className = `toast-item toast-${type} toast-show`;
+      t.innerHTML = `<span>${type === 'error' ? '❌' : '✅'}</span> <span>${msg}</span>`;
+      container.appendChild(t);
+      setTimeout(() => {
+        t.classList.remove('toast-show');
+        setTimeout(() => t.remove(), 300);
+      }, 3500);
+    }
+
+    async function checkAuth() {
+      if (adminToken) {
+        document.getElementById('admin-login-view').style.display = 'none';
+        document.getElementById('admin-dashboard-view').style.display = 'block';
+        document.getElementById('btn-admin-logout').style.display = 'inline-flex';
+        loadDashboard();
+      } else {
+        document.getElementById('admin-login-view').style.display = 'block';
+        document.getElementById('admin-dashboard-view').style.display = 'none';
+        document.getElementById('btn-admin-logout').style.display = 'none';
+      }
+    }
+
+    async function loadDashboard() {
+      await Promise.all([loadClaims(), loadMetrics(), loadStudents()]);
+    }
+
+    async function loadMetrics() {
+      try {
+        const stats = await API.getStats();
+        document.getElementById('metric-total-bottles').textContent = stats.totalBottles;
+        document.getElementById('metric-active-students').textContent = stats.activeStudents;
+        document.getElementById('metric-pending-count').textContent = stats.pendingClaims;
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    async function loadClaims() {
+      const filter = document.getElementById('claims-filter-select').value;
+      try {
+        const data = await API.getAdminClaims(filter);
+        const tbody = document.getElementById('claims-table-body');
+        const claims = data.claims || [];
+
+        if (!claims.length) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 24px;">No claims found in this queue.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = claims.map(c => {
+          const isPending = c.status === 'pending';
+          const isApproved = c.status === 'approved';
+          const time = new Date(c.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const statusClass = isApproved ? 'badge-approved' : c.status === 'rejected' ? 'badge-rejected' : 'badge-pending';
+
+          return `
+            <tr>
+              <td><code>${c.id}</code></td>
+              <td>
+                <strong>${c.studentName}</strong>
+                <div style="font-size: 0.75rem; color: #64748b;">${c.studentEmail}</div>
+              </td>
+              <td><span class="bottle-count-badge">🍾 ${c.bottles}</span></td>
+              <td><strong style="color: #059669;">+${c.pointsRequested} Pts</strong></td>
+              <td>${time}</td>
+              <td><span class="claim-badge ${statusClass}">${c.status.toUpperCase()}</span></td>
+              <td>
+                ${isPending ? `
+                  <div style="display: flex; gap: 6px;">
+                    <button class="btn btn-xs btn-success" onclick="approveSingle('${c.id}')">✓ Approve</button>
+                    <button class="btn btn-xs btn-danger" onclick="rejectSingle('${c.id}')">✕ Reject</button>
+                  </div>
+                ` : `<span style="color: #94a3b8; font-size: 0.75rem;">Completed</span>`}
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function loadStudents() {
+      try {
+        const data = await API.getAdminStudents();
+        const tbody = document.getElementById('students-table-body');
+        const students = data.students || [];
+
+        tbody.innerHTML = students.map(s => `
+          <tr>
+            <td><strong>${s.name}</strong></td>
+            <td>${s.email}</td>
+            <td>${s.grade || '-'}</td>
+            <td>🍾 ${s.totalBottles || 0}</td>
+            <td><strong style="color: #059669;">${s.points} Pts</strong></td>
+            <td>${(s.co2SavedKg || 0).toFixed(2)} kg</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+
+    async function approveSingle(claimId) {
+      try {
+        const res = await API.approveClaim(claimId);
+        showToast(res.message, 'success');
+        loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function rejectSingle(claimId) {
+      const reason = prompt('Rejection reason (e.g. Non-plastic item / duplicate):', 'Item was not an eligible bottle');
+      if (reason === null) return;
+      try {
+        const res = await API.rejectClaim(claimId, reason);
+        showToast(res.message, 'info');
+        loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function bulkApprove() {
+      if (!confirm('Approve all pending bottle claims? Points will be credited to students instantly.')) return;
+      try {
+        const res = await API.bulkApproveClaims();
+        showToast(res.message, 'success');
+        loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function logoutAdmin() {
+      adminToken = null;
+      localStorage.removeItem('ecoreward_admin_token');
+      checkAuth();
+      showToast('Signed out of admin.', 'info');
+    }
+
+    document.getElementById('admin-page-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('admin-input-user').value.trim();
+      const password = document.getElementById('admin-input-pass').value.trim();
+
+      try {
+        const res = await API.adminLogin({ email, password });
+        adminToken = res.token;
+        localStorage.setItem('ecoreward_admin_token', res.token);
+        showToast('Login successful!', 'success');
+        checkAuth();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    });
+
+    document.getElementById('claims-filter-select').addEventListener('change', loadClaims);
+
+    checkAuth();
+  </script>
+</body>
+</html>
+

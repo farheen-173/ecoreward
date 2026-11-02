@@ -1,0 +1,22 @@
+{
+  "name": "eco-reward",
+  "version": "1.0.0",
+  "description": "Smart dustbin reward system for schools - encouraging plastic bottle recycling with rewards, QR code registration, and admin approval",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "smart-dustbin",
+    "recycling",
+    "eco-rewards",
+    "sustainability",
+    "school-iot"
+  ],
+  "author": "EcoReward Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

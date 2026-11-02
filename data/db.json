@@ -1,0 +1,59 @@
+{
+  "students": [],
+  "claims": [],
+  "rewards": [
+    {
+      "id": "rew_1",
+      "title": "Bronze Surprise Gift Box",
+      "description": "A delightful mystery eco-friendly school gift curated by the school green team.",
+      "pointsCost": 30,
+      "icon": "🎁",
+      "stock": 50,
+      "category": "surprise"
+    },
+    {
+      "id": "rew_2",
+      "title": "Silver Mystery Hamper",
+      "description": "An exciting bundle of mystery treats and eco rewards wrapped specially for you.",
+      "pointsCost": 60,
+      "icon": "🎁",
+      "stock": 35,
+      "category": "surprise"
+    },
+    {
+      "id": "rew_3",
+      "title": "Gold Principal's Surprise Reward",
+      "description": "A special mystery appreciation reward package personally awarded by the school principal.",
+      "pointsCost": 100,
+      "icon": "🌟",
+      "stock": 20,
+      "category": "surprise"
+    },
+    {
+      "id": "rew_4",
+      "title": "Platinum Eco-Hero Mega Surprise",
+      "description": "The ultimate mystery prize for top recyclers! Revealed only upon redemption.",
+      "pointsCost": 150,
+      "icon": "🏆",
+      "stock": 10,
+      "category": "surprise"
+    }
+  ],
+  "redemptions": [],
+  "dustbins": [
+    {
+      "id": "BIN-MAIN-01",
+      "name": "School Main EcoDustbin",
+      "location": "Campus Central Station",
+      "fillPercentage": 0,
+      "totalBottlesCollected": 0,
+      "status": "online"
+    }
+  ],
+  "settings": {
+    "schoolName": "Greenwood Eco School",
+    "pointsPerBottle": 10,
+    "adminEmail": "admin@school.edu",
+    "adminPassword": "admin123"
+  }
+}
